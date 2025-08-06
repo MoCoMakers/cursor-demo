@@ -1,10 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager
-from flask_bcrypt import Bcrypt
 import os
 from dotenv import load_dotenv
+import logging
 
 # Load environment variables
 load_dotenv()
@@ -12,8 +11,6 @@ load_dotenv()
 # Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
-login_manager = LoginManager()
-bcrypt = Bcrypt()
 
 def create_app():
     app = Flask(__name__)
@@ -30,19 +27,18 @@ def create_app():
     # Initialize extensions with app
     db.init_app(app)
     migrate.init_app(app, db)
-    login_manager.init_app(app)
-    bcrypt.init_app(app)
-    
-    # Configure login manager
-    login_manager.login_view = 'auth.login'
-    login_manager.login_message_category = 'info'
     
     # Register blueprints
     from app.routes import main
     app.register_blueprint(main)
     
-    # Create database tables
-    with app.app_context():
-        db.create_all()
+    # Create database tables with error handling
+    try:
+        with app.app_context():
+            db.create_all()
+            app.logger.info("Database tables created successfully")
+    except Exception as e:
+        app.logger.warning(f"Database initialization failed: {e}")
+        app.logger.info("Application will continue without database tables")
     
     return app 

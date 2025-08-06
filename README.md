@@ -5,6 +5,8 @@ A modern web application for managing investment portfolios, built with Flask, A
 ## 🚀 Features
 
 - **Modern Web Interface**: Clean, responsive design for portfolio management
+- **AI-Powered Trading**: Bayesian investment strategies using PyMC3 and machine learning
+- **Paper Trading**: Risk-free trading simulation using Alpaca API
 - **Database Integration**: MySQL backend for data persistence
 - **Docker Environment**: Easy setup and deployment with Docker Compose
 - **Apache Web Server**: Production-ready web server configuration
@@ -69,6 +71,11 @@ SECRET_KEY=your_secret_key_here
 # Application Configuration
 APP_HOST=0.0.0.0
 APP_PORT=5000
+
+# Alpaca API Configuration (for paper trading)
+ALPACA_API_KEY=your_alpaca_api_key
+ALPACA_SECRET_KEY=your_alpaca_secret_key
+ALPACA_BASE_URL=https://paper-api.alpaca.markets
 ```
 
 ### 3. Build and Start the Application
@@ -114,8 +121,12 @@ curor-demo/
 │   ├── __init__.py        # Flask app initialization
 │   ├── routes.py          # Application routes
 │   ├── models.py          # Database models
+│   ├── bayesian_service.py # AI trading service
 │   ├── static/            # Static files (CSS, JS, images)
 │   └── templates/         # HTML templates
+│       ├── index.html     # Main landing page
+│       ├── dashboard.html # Portfolio dashboard
+│       └── trading.html   # AI trading dashboard
 ├── docker/                # Docker configuration files
 │   ├── apache/           # Apache configuration
 │   └── mysql/            # MySQL configuration
@@ -180,6 +191,154 @@ docker-compose down -v
 
 # Stop development environment
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
+```
+
+## 🧠 Key Concepts and Classes
+
+### Core Architecture
+
+The application follows a **Model-View-Controller (MVC)** pattern with the following key components:
+
+#### Database Models (`app/models.py`)
+- **`Portfolio`**: Represents investment portfolios with relationships to investments and trading strategies
+- **`Investment`**: Individual investment holdings with symbol, quantity, and purchase price
+- **`TradingStrategy`**: AI trading strategies with statistical parameters (alpha, beta, sigma)
+- **`Trade`**: Individual paper trades with prediction data and performance metrics
+- **`MarketData`**: Historical price data for analysis and backtesting
+
+#### AI Trading Service (`app/bayesian_service.py`)
+- **`BayesianTradingService`**: Core service implementing statistical trading strategies
+  - **Market Data Integration**: Fetches real-time data from Alpaca API using `alpaca-py`
+  - **Statistical Analysis**: Uses `scipy.stats.linregress` for return prediction
+  - **Signal Generation**: Creates buy/sell signals based on predicted returns
+  - **Paper Trading**: Executes simulated trades with position sizing and risk management
+
+#### Web Interface (`app/templates/`)
+- **`index.html`**: Main landing page with navigation to trading dashboard
+- **`dashboard.html`**: Portfolio management interface
+- **`trading.html`**: AI trading dashboard with strategy creation and monitoring
+
+### Statistical Trading Algorithm
+
+The AI trading system uses a **linear regression model** for return prediction:
+
+1. **Data Collection**: Fetches historical price data from Alpaca API
+2. **Return Calculation**: Computes daily returns from price data
+3. **Model Fitting**: Fits linear regression to identify trends
+4. **Prediction**: Predicts next day's return using fitted model
+5. **Signal Generation**: Creates buy/sell signals based on predictions and confidence thresholds
+
+### API Integration
+
+- **Alpaca API (`alpaca-py`)**: Modern Python SDK for market data and paper trading
+- **Trading Client**: Handles order execution and account management
+- **Data Client**: Retrieves historical market data for analysis
+
+## 🤖 AI Trading Features
+
+### Statistical Investment Strategies
+
+The application includes AI-powered trading strategies using statistical analysis:
+
+- **Statistical Model Fitting**: Linear regression analysis for return prediction
+- **Paper Trading**: Risk-free trading simulation using Alpaca API
+- **Real-time Analysis**: Live market data analysis and prediction
+- **Strategy Management**: Create, configure, and monitor trading strategies
+
+### Getting Started with AI Trading
+
+1. **Access the Trading Dashboard**: Navigate to `/trading` in the web application
+2. **Create Sample Data**: Click "Create Sample Data" to populate the database with test data
+3. **Create a Strategy**: Set up a new trading strategy with your preferred parameters
+4. **Configure Alpaca API**: Add your Alpaca API credentials to the `.env` file for paper trading
+5. **Run Analysis**: Use the "Analyze" feature to see predictions without executing trades
+6. **Execute Trades**: Run strategies to execute paper trades based on AI predictions
+
+### Alpaca API Setup
+
+To enable paper trading functionality:
+
+1. Sign up for a free Alpaca account at [alpaca.markets](https://alpaca.markets)
+2. Get your API key and secret from the Alpaca dashboard
+3. Add them to your `.env` file:
+   ```env
+   ALPACA_API_KEY=your_api_key_here
+   ALPACA_SECRET_KEY=your_secret_key_here
+   ALPACA_BASE_URL=https://paper-api.alpaca.markets
+   ```
+
+### Trading Strategy Components
+
+- **Market Data Analysis**: Historical price data analysis using Alpaca API
+- **Statistical Model Fitting**: Linear regression models for return prediction
+- **Signal Generation**: Buy/sell signals based on predicted returns
+- **Risk Management**: Position sizing and confidence thresholds
+- **Performance Tracking**: Win rate and P&L monitoring
+
+## 📊 Viewing Sample Portfolio
+
+### Quick Start - View Sample Data
+
+1. **Start the Application**:
+   ```bash
+   docker-compose up -d
+   ```
+
+2. **Access the Web Interface**:
+   - Open your browser and go to: http://localhost:8080
+   - You'll see the main landing page for "Investment Portfolio"
+
+3. **Navigate to Trading Dashboard**:
+   - Click the "AI Trading Dashboard" button or go to: http://localhost:8080/trading
+   - This will take you to the AI trading interface
+
+4. **Create Sample Data**:
+   - In the trading dashboard, click the **"Create Sample Data"** button
+   - This will populate the database with:
+     - Sample portfolio with $100,000 initial value
+     - Sample investments (AAPL, GOOGL, MSFT)
+     - Sample trading strategies
+     - Sample market data for analysis
+
+5. **Explore the Sample Portfolio**:
+   - **Portfolio Overview**: View total value, investments, and performance
+   - **Trading Strategies**: See sample strategies with different parameters
+   - **Recent Trades**: View simulated trades with predictions and outcomes
+   - **Market Data**: Access historical price data for analysis
+
+### Sample Data Structure
+
+When you create sample data, the system generates:
+
+- **Portfolio**: "Sample Portfolio" with $100,000 initial value
+- **Investments**: 
+  - AAPL: 50 shares at $150.00
+  - GOOGL: 30 shares at $2,800.00
+  - MSFT: 40 shares at $300.00
+- **Trading Strategies**:
+  - "Conservative AAPL Strategy" (confidence: 0.1, position size: 0.05)
+  - "Aggressive GOOGL Strategy" (confidence: 0.05, position size: 0.1)
+- **Market Data**: 100 days of historical price data for each symbol
+
+### Using the Sample Data
+
+1. **Analyze Strategies**: Click "Analyze" on any strategy to see predictions
+2. **Run Strategies**: Click "Run Strategy" to execute paper trades
+3. **View Results**: Check the "Recent Trades" section to see trade outcomes
+4. **Monitor Performance**: Track win rates and P&L for each strategy
+
+### Database Access
+
+You can also view the sample data directly in the database:
+
+```bash
+# Access phpMyAdmin
+# Open: http://localhost:8081
+# Username: portfolio_user
+# Password: your_password (from .env file)
+
+# Or connect via command line
+docker-compose exec db mysql -u portfolio_user -p investment_portfolio
 ```
 
 ## 🗄️ Database Management

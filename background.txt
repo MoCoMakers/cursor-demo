@@ -1,0 +1,46 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import pymc3 as pm
+
+# Step 1: Load historical price data
+# For simplicity, we'll simulate it
+np.random.seed(42)
+days = 100
+price = np.cumsum(np.random.normal(0, 1, days)) + 100
+returns = np.diff(price)
+
+# Step 2: Prepare data
+X = np.arange(len(returns))  # time index
+y = returns
+
+# Step 3: Define Bayesian model
+with pm.Model() as model:
+    alpha = pm.Normal("alpha", mu=0, sigma=1)
+    beta = pm.Normal("beta", mu=0, sigma=1)
+    sigma = pm.HalfNormal("sigma", sigma=1)
+
+    mu = alpha + beta * X
+    likelihood = pm.Normal("y", mu=mu, sigma=sigma, observed=y)
+
+    # Step 4: Run MCMC sampling
+    trace = pm.sample(1000, tune=1000, target_accept=0.95)
+
+# Step 5: Analyze results
+pm.plot_trace(trace)
+plt.show()
+
+# Step 6: Predict next return
+next_day = len(X)
+predicted_return = trace["alpha"] + trace["beta"] * next_day
+expected_return = np.mean(predicted_return)
+
+print(f"Expected return for next day: {expected_return:.4f}")
+
+
+- Bayesian inference: Updates beliefs about model parameters based on observed data
+- MCMC sampling: Generates samples from the posterior distribution when it's analytically intractable
+- Expected return: The mean of predicted future returns, used to guide buy/sell decisions
+- Time series modeling: Treats asset returns as a function of time
+- Alpha and beta: Regression coefficients representing intercept and trend
+- Volatility (σ): Modeled as a random variable to capture uncertainty in returns
