@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Portfolio - Welcome</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-bg: #ecf0f1;
+            --dark-text: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .hero-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            max-width: 1200px;
+            overflow: hidden;
+        }
+        
+        .hero-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-content {
+            padding: 3rem 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, var(--success-color), var(--warning-color));
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .btn-custom {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        
+        .stats-section {
+            background: var(--light-bg);
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .stat-item {
+            display: inline-block;
+            margin: 0 2rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .feature-card {
+                margin-bottom: 1.5rem;
+            }
+            
+            .stat-item {
+                margin: 1rem;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="hero-section">
+            <!-- Hero Header -->
+            <div class="hero-header">
+                <h1 class="hero-title">
+                    <i class="fas fa-chart-line me-3"></i>
+                    Investment Portfolio
+                </h1>
+                <p class="hero-subtitle">
+                    Manage your investments with confidence and precision
+                </p>
+                <div>
+                    <a href="/dashboard" class="btn-custom">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Go to Dashboard
+                    </a>
+                    <a href="/api/portfolios" class="btn-custom">
+                        <i class="fas fa-code me-2"></i>
+                        View API
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Hero Content -->
+            <div class="hero-content">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-portfolio"></i>
+                            </div>
+                            <h3 class="feature-title">Portfolio Management</h3>
+                            <p class="feature-description">
+                                Create and manage multiple investment portfolios with ease. 
+                                Track your assets, monitor performance, and make informed decisions.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h3 class="feature-title">Real-time Analytics</h3>
+                            <p class="feature-description">
+                                Get real-time insights into your investment performance. 
+                                Track gains, losses, and portfolio diversification.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="feature-title">Secure & Reliable</h3>
+                            <p class="feature-description">
+                                Built with modern security practices. Your data is protected 
+                                with enterprise-grade encryption and secure database storage.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Section -->
+                <div class="stats-section">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalPortfolios">0</span>
+                        <span class="stat-label">Portfolios</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalInvestments">0</span>
+                        <span class="stat-label">Investments</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalValue">$0</span>
+                        <span class="stat-label">Total Value</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA Section -->
+            <div class="cta-section">
+                <h2>Ready to Start Managing Your Investments?</h2>
+                <p class="mb-4">
+                    Join thousands of investors who trust our platform for their portfolio management needs.
+                </p>
+                <a href="/dashboard" class="btn-custom">
+                    <i class="fas fa-rocket me-2"></i>
+                    Get Started Now
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load portfolio statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/portfolios');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const portfolios = data.portfolios;
+                    document.getElementById('totalPortfolios').textContent = portfolios.length;
+                    
+                    let totalInvestments = 0;
+                    let totalValue = 0;
+                    
+                    portfolios.forEach(portfolio => {
+                        totalValue += portfolio.total_value || 0;
+                    });
+                    
+                    document.getElementById('totalInvestments').textContent = totalInvestments;
+                    document.getElementById('totalValue').textContent = `$${totalValue.toLocaleString()}`;
+                }
+            } catch (error) {
+                console.log('Stats loading failed:', error);
+            }
+        }
+        
+        // Load stats when page loads
+        document.addEventListener('DOMContentLoaded', loadStats);
+    </script>
+</body>
+</html> 

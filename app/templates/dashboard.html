@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Investment Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-bg: #f8f9fa;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .portfolio-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .stats-card {
+            background: white;
+        }
+        
+        .btn-custom {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .btn-custom:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>
+                Investment Portfolio
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link active" href="/dashboard">Dashboard</a>
+                <a class="nav-link" href="/api/portfolios">API</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="display-4 fw-bold text-dark">
+                    <i class="fas fa-tachometer-alt me-3"></i>
+                    Portfolio Dashboard
+                </h1>
+                <p class="lead text-muted">Manage and monitor your investment portfolios</p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-briefcase fa-3x text-primary mb-3"></i>
+                        <h3 class="card-title" id="totalPortfoliosCount">0</h3>
+                        <p class="card-text text-muted">Total Portfolios</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                        <h3 class="card-title" id="totalValue">$0</h3>
+                        <p class="card-text text-muted">Total Portfolio Value</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-trending-up fa-3x text-warning mb-3"></i>
+                        <h3 class="card-title" id="totalGainLoss">$0</h3>
+                        <p class="card-text text-muted">Total Gain/Loss</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Portfolio Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-plus me-2"></i>
+                            Create New Portfolio
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="createPortfolioForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="portfolioName" class="form-label">Portfolio Name</label>
+                                        <input type="text" class="form-control" id="portfolioName" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="portfolioDescription" class="form-label">Description</label>
+                                        <input type="text" class="form-control" id="portfolioDescription">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-custom">
+                                <i class="fas fa-plus me-2"></i>
+                                Create Portfolio
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolios List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            Your Portfolios
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="portfoliosList">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                                <p>Loading portfolios...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load portfolios
+        async function loadPortfolios() {
+            try {
+                const response = await fetch('/api/portfolios');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayPortfolios(data.portfolios);
+                    updateStats(data.portfolios);
+                } else {
+                    document.getElementById('portfoliosList').innerHTML = 
+                        '<div class="text-center text-muted"><p>No portfolios found</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading portfolios:', error);
+                document.getElementById('portfoliosList').innerHTML = 
+                    '<div class="text-center text-danger"><p>Error loading portfolios</p></div>';
+            }
+        }
+
+        // Display portfolios
+        function displayPortfolios(portfolios) {
+            const container = document.getElementById('portfoliosList');
+            
+            if (portfolios.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-muted">
+                        <i class="fas fa-briefcase fa-3x mb-3"></i>
+                        <p>No portfolios yet. Create your first portfolio above!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const portfoliosHtml = portfolios.map(portfolio => `
+                <div class="card portfolio-card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h5 class="card-title">${portfolio.name}</h5>
+                                <p class="card-text">${portfolio.description || 'No description'}</p>
+                                <small class="text-light">Created: ${new Date(portfolio.created_at).toLocaleDateString()}</small>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <h4 class="mb-2">$${portfolio.total_value.toLocaleString()}</h4>
+                                <button class="btn btn-light btn-sm" onclick="viewPortfolio(${portfolio.id})">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = portfoliosHtml;
+        }
+
+        // Update statistics
+        function updateStats(portfolios) {
+            document.getElementById('totalPortfoliosCount').textContent = portfolios.length;
+            
+            const totalValue = portfolios.reduce((sum, p) => sum + (p.total_value || 0), 0);
+            document.getElementById('totalValue').textContent = `$${totalValue.toLocaleString()}`;
+            
+            // For now, we'll set gain/loss to 0 since we don't have that data yet
+            document.getElementById('totalGainLoss').textContent = '$0';
+        }
+
+        // Create portfolio form handler
+        document.getElementById('createPortfolioForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('portfolioName').value;
+            const description = document.getElementById('portfolioDescription').value;
+            
+            try {
+                const response = await fetch('/api/portfolios', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, description })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Reset form
+                    document.getElementById('createPortfolioForm').reset();
+                    
+                    // Reload portfolios
+                    loadPortfolios();
+                    
+                    // Show success message
+                    alert('Portfolio created successfully!');
+                } else {
+                    alert('Error creating portfolio: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error creating portfolio:', error);
+                alert('Error creating portfolio. Please try again.');
+            }
+        });
+
+        // View portfolio details (placeholder function)
+        function viewPortfolio(portfolioId) {
+            alert(`Viewing portfolio ${portfolioId}. This feature will be implemented soon!`);
+        }
+
+        // Load portfolios when page loads
+        document.addEventListener('DOMContentLoaded', loadPortfolios);
+    </script>
+</body>
+</html> 
