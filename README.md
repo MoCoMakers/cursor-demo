@@ -19,6 +19,22 @@ Before you begin, ensure you have the following installed on your system:
 
 ## 🛠️ Setup Instructions
 
+### Quick Start (3 steps)
+
+```bash
+# 1. Copy environment file
+cp env.example .env
+
+# 2. Build and start the application
+docker-compose up -d --build
+
+# 3. Access the application
+# Web App: http://localhost:8080
+# phpMyAdmin: http://localhost:8081
+```
+
+### Detailed Setup
+
 ### 1. Clone the Repository
 
 ```bash
@@ -33,6 +49,8 @@ Copy the example environment file and configure your settings:
 ```bash
 cp env.example .env
 ```
+
+**Quick Setup (Optional):** If you want to use default settings, you can skip editing the `.env` file for now. The application will work with the default values.
 
 Edit the `.env` file with your preferred configuration:
 
@@ -55,17 +73,6 @@ APP_PORT=5000
 
 ### 3. Build and Start the Application
 
-#### Option 1: Using Makefile (Recommended)
-```bash
-# Quick setup (creates .env file, builds, and starts development environment)
-make setup
-
-# Or step by step:
-make build
-make dev
-```
-
-#### Option 2: Using Docker Compose directly
 ```bash
 # Build the Docker images
 docker-compose build
@@ -113,9 +120,11 @@ curor-demo/
 │   ├── apache/           # Apache configuration
 │   └── mysql/            # MySQL configuration
 ├── docker-compose.yml     # Docker Compose configuration
+├── docker-compose.dev.yml # Development overrides
+├── docker-compose.prod.yml # Production overrides
 ├── Dockerfile             # Flask application Dockerfile
 ├── requirements.txt       # Python dependencies
-├── .env.example          # Environment variables template
+├── env.example           # Environment variables template
 └── README.md             # This file
 ```
 
@@ -128,40 +137,24 @@ The application runs the following services:
 - **db**: MySQL database server
 - **phpmyadmin**: Database management interface (optional)
 
+### Docker Compose Configurations
+
+The project includes three Docker Compose files:
+
+- **`docker-compose.yml`**: Base configuration with all services
+- **`docker-compose.dev.yml`**: Development overrides (hot reload, additional ports)
+- **`docker-compose.prod.yml`**: Production overrides (Gunicorn, resource limits, security)
+
 ## 🔧 Development
-
-### Using the Makefile
-
-The project includes a Makefile with convenient commands for common tasks:
-
-```bash
-# View all available commands
-make help
-
-# Quick setup (creates .env, builds, and starts dev environment)
-make setup
-
-# Development commands
-make dev      # Start development environment
-make build    # Build Docker images
-make up       # Start all services
-make down     # Stop all services
-make restart  # Restart all services
-make logs     # View service logs
-
-# Production commands
-make prod     # Start production environment
-
-# Maintenance commands
-make clean    # Clean up containers and volumes
-make test     # Run tests
-```
 
 ### Running in Development Mode
 
 ```bash
-# Start with development settings
+# Start with development settings (includes hot reload and additional ports)
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+# Or start with basic configuration
+docker-compose up -d
 ```
 
 ### Viewing Logs
@@ -184,6 +177,9 @@ docker-compose down
 
 # Stop and remove volumes (database data)
 docker-compose down -v
+
+# Stop development environment
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
 ```
 
 ## 🗄️ Database Management
@@ -220,6 +216,9 @@ docker-compose exec -T db mysql -u root -p investment_portfolio < backup.sql
 ```bash
 # Production build
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+# Or build and start in one command
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
 
 ## 🐛 Troubleshooting
@@ -229,6 +228,10 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 1. **Port Already in Use**: Change the port mappings in `docker-compose.yml`
 2. **Database Connection Issues**: Check the `.env` file configuration
 3. **Permission Errors**: Ensure Docker has proper permissions
+4. **Apache/Web Server Issues**: 
+   - Check if port 8080 is available
+   - Verify Apache configuration with `docker-compose logs web`
+   - Ensure the Flask app is running before Apache starts
 
 ### Useful Commands
 
@@ -244,6 +247,15 @@ docker-compose ps
 
 # Access container shell
 docker-compose exec app bash
+
+# View specific service logs
+docker-compose logs -f app
+docker-compose logs -f db
+docker-compose logs -f web
+
+# Clean up everything (containers, volumes, networks)
+docker-compose down -v --remove-orphans
+docker system prune -f
 ```
 
 ## 📝 Contributing
