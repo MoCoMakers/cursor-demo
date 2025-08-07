@@ -1,4 +1,5 @@
-# Investment Portfolio Web Application
+# Investment Portfolio Web Application - A Demo of using Cursor.
+Relevant prompts are [available here](https://docs.google.com/document/d/1xWvUv9rvVbaR-K3LWZX0Ax7ltBbBfaBMt-i-QGTXDAg/edit?usp=sharing)
 
 A modern web application for managing investment portfolios, built with Flask, Apache, and MySQL in a Docker environment.
 
